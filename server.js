@@ -1,4 +1,7 @@
 /* Setting things up. */
+var env = require('node-env-file');
+env(__dirname + '/.env');
+
 var path = require('path'),
     express = require('express'),
     app = express(),   
@@ -19,30 +22,34 @@ var path = require('path'),
 app.use(express.static('public'));
 
 app.all("/tweet", async function (request, response) {
-  var resp = response;
-  var stats = await fetchGHData();
-  var lastTweetedCommit = await readFilePromise("last-commit.txt");
-  var lastStatsCommit = getLatestCommit(stats);
-  
-  if (lastStatsCommit == lastTweetedCommit) {
-    return;
-  }
-  
-  var tweet = getTweetFromStats(statsify(stats[lastTweetedCommit]));
+  try {
+    var resp = response;
+    var stats = await fetchGHData();
+    var lastTweetedCommit = await readFilePromise("/last-commit.txt");
+    var lastStatsCommit = getLatestCommit(stats);
+    
+    if (lastStatsCommit == lastTweetedCommit) {
+      return;
+    }
 
-  T.post('statuses/update', { status: tweet }, function(err, data, response) {
-    if (err){
-      resp.sendStatus(500);
-      console.log('Error!');
-      console.log(err);
-    }
-    else{
-      resp.sendStatus(200);
-      fs.writeFile(__dirname + '/last-commit.txt', lastStatsCommit, function (err) {
-        /* TODO: Error handling? */
-      });
-    }
-  });
+    var tweet = getTweetFromStats(statsify(stats[lastStatsCommit], stats));
+  
+    T.post('statuses/update', { status: tweet }, function(err, data, response) {
+      if (err){
+        resp.sendStatus(500);
+        console.log('Error!');
+        console.log(err);
+      }
+      else{
+        resp.sendStatus(200);
+        fs.writeFile(__dirname + '/last-commit.txt', lastStatsCommit, function (err) {
+          /* TODO: Error handling? */
+        });
+      }
+    });
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 var listener = app.listen(process.env.PORT, function () {
@@ -77,11 +84,7 @@ async function fetchGHData() {
 }
 
 function getNumberOfBindings(rawStats) {
-  let sum = 0;
-  for (let stat in rawStats) {
-    sum += rawStats[stat];
-  }
-  return sum;
+  return rawStats.numBindings;
 }
 
 function statsify(rawStats, allStats) {
