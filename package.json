@@ -1,7 +1,7 @@
 {
-  "name": "glitch-twitterbot",
+  "name": "xbl-bot",
   "version": "0.0.1",
-  "description": "Beep beep tweet!",
+  "description": "xbl bot",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -17,8 +17,6 @@
   },
   "keywords": [
     "node",
-    "glitch",
-    "gomix",
     "hyperdev",
     "twitter",
     "twitterbot",
