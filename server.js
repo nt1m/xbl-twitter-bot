@@ -38,8 +38,8 @@ app.all("/tweet", async function (request, response) {
     var lastStatsCommit = getLatestCommit(stats);
     
     if (lastStatsCommit == lastTweetedCommit) {
-      resp.sendStatus(200);
       resp.send('OK');
+      resp.sendStatus(200);
       console.log("Already tweeted", lastTweetedCommit);
       return;
     }
@@ -51,10 +51,9 @@ app.all("/tweet", async function (request, response) {
         resp.sendStatus(500);
         console.error('Error tweeting', lastTweetedCommit);
         console.error(err);
-      }
-      else{
-        resp.sendStatus(200);
+      } else {
         resp.send('OK');
+        resp.sendStatus(200);
         console.log("Successfully tweeted", lastTweetedCommit);
       }
       fs.writeFile(__dirname + '/last-commit.txt', lastStatsCommit, function (err) {
