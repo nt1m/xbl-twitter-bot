@@ -1,6 +1,9 @@
 /* Setting things up. */
-var env = require('node-env-file');
-env(__dirname + '/.env');
+
+if (!process.env.IGNORE_ENV_FILE) {
+  var env = require('node-env-file');
+  env(__dirname + '/.env');
+}
 
 var path = require('path'),
     express = require('express'),
