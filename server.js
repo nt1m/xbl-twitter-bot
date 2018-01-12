@@ -34,7 +34,7 @@ app.all("/tweet", async function (request, response) {
   try {
     var resp = response;
     var stats = await fetchGHData();
-    var lastTweetedCommit = await readFilePromise("/last-commit.txt");
+    var lastTweetedCommit = await readFilePromise("last-commit.txt");
     var lastStatsCommit = getLatestCommit(stats);
     
     if (lastStatsCommit == lastTweetedCommit) {
@@ -56,10 +56,10 @@ app.all("/tweet", async function (request, response) {
         resp.sendStatus(200);
         resp.send('OK');
         console.log("Successfully tweeted");
-        fs.writeFile(__dirname + '/last-commit.txt', lastStatsCommit, function (err) {
-          /* TODO: Error handling? */
-        });
       }
+      fs.writeFile(__dirname + 'last-commit.txt', lastStatsCommit, function (err) {
+        /* TODO: Error handling? */
+      });
     });
   } catch (e) {
     console.error(e);
@@ -73,13 +73,13 @@ var listener = app.listen(process.env.PORT, function () {
   
 async function readFilePromise(file) {
   return new Promise((res, rej) => {
-   fs.readFile(__dirname + file, 'utf8', function (err, contents) {
-     if (err) {
-       rej(err);
-     } else {
-       res(contents);
-     }
-   });
+    fs.readFile(__dirname + '/' + file, {encoding: 'utf8', flag: 'a+'}, function (err, contents) {
+      if (err) {
+        rej(err);
+      } else {
+        res(contents);
+      }
+    });
   });
 }
   
