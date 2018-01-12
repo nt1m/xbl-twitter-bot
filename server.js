@@ -25,6 +25,7 @@ var path = require('path'),
 app.use(express.static('public'));
 
 app.all("/tweet", async function (request, response) {
+  console.log("/tweet endpoint reached");
   try {
     var resp = response;
     var stats = await fetchGHData();
@@ -32,6 +33,7 @@ app.all("/tweet", async function (request, response) {
     var lastStatsCommit = getLatestCommit(stats);
     
     if (lastStatsCommit == lastTweetedCommit) {
+      console.log("Already tweeted", lastTweetedCommit);
       return;
     }
 
@@ -40,18 +42,19 @@ app.all("/tweet", async function (request, response) {
     T.post('statuses/update', { status: tweet }, function(err, data, response) {
       if (err){
         resp.sendStatus(500);
-        console.log('Error!');
-        console.log(err);
+        console.error('Error!');
+        console.error(err);
       }
       else{
         resp.sendStatus(200);
+        console.log("Successfully tweeted");
         fs.writeFile(__dirname + '/last-commit.txt', lastStatsCommit, function (err) {
           /* TODO: Error handling? */
         });
       }
     });
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 });
 
