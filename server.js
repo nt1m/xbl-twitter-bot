@@ -24,6 +24,11 @@ var path = require('path'),
 
 app.use(express.static('public'));
 
+app.all("/", function(req, resp) {
+  resp.send('Hello world');
+  resp.sendStatus(200);
+});
+
 app.all("/tweet", async function (request, response) {
   console.log("/tweet endpoint reached");
   try {
@@ -33,6 +38,8 @@ app.all("/tweet", async function (request, response) {
     var lastStatsCommit = getLatestCommit(stats);
     
     if (lastStatsCommit == lastTweetedCommit) {
+      resp.sendStatus(200);
+      resp.send('OK');
       console.log("Already tweeted", lastTweetedCommit);
       return;
     }
@@ -47,6 +54,7 @@ app.all("/tweet", async function (request, response) {
       }
       else{
         resp.sendStatus(200);
+        resp.send('OK');
         console.log("Successfully tweeted");
         fs.writeFile(__dirname + '/last-commit.txt', lastStatsCommit, function (err) {
           /* TODO: Error handling? */
