@@ -49,15 +49,15 @@ app.all("/tweet", async function (request, response) {
     T.post('statuses/update', { status: tweet }, function(err, data, response) {
       if (err){
         resp.sendStatus(500);
-        console.error('Error!');
+        console.error('Error tweeting', lastTweetedCommit);
         console.error(err);
       }
       else{
         resp.sendStatus(200);
         resp.send('OK');
-        console.log("Successfully tweeted");
+        console.log("Successfully tweeted", lastTweetedCommit);
       }
-      fs.writeFile(__dirname + 'last-commit.txt', lastStatsCommit, function (err) {
+      fs.writeFile(__dirname + '/last-commit.txt', lastStatsCommit, function (err) {
         /* TODO: Error handling? */
       });
     });
