@@ -25,7 +25,6 @@ var path = require('path'),
 app.use(express.static('public'));
 
 app.all("/", function(req, resp) {
-  resp.send('Hello world');
   resp.sendStatus(200);
 });
 
@@ -38,7 +37,6 @@ app.all("/tweet", async function (request, response) {
     var lastStatsCommit = getLatestCommit(stats);
     
     if (lastStatsCommit == lastTweetedCommit) {
-      resp.send('OK');
       resp.sendStatus(200);
       console.log("Already tweeted", lastTweetedCommit);
       return;
@@ -48,11 +46,10 @@ app.all("/tweet", async function (request, response) {
   
     T.post('statuses/update', { status: tweet }, function(err, data, response) {
       if (err){
-        resp.sendStatus(500);
+        resp.sendStatus(200);
         console.error('Error tweeting', lastTweetedCommit);
         console.error(err);
       } else {
-        resp.send('OK');
         resp.sendStatus(200);
         console.log("Successfully tweeted", lastTweetedCommit);
       }
