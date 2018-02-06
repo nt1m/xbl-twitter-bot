@@ -79,7 +79,7 @@ async function readFilePromise(file) {
   });
 }
   
-var GITHUB_STATS_URL = "https://bgrins.github.io/xbl-analysis/graph/xbl-counts.js";
+var GITHUB_STATS_URL = "https://raw.githubusercontent.com/bgrins/xbl-analysis/gh-pages/graph/xbl-counts.js";
 
 async function fetchGHData() {
   let response = await fetch(GITHUB_STATS_URL);
