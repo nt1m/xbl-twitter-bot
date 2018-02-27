@@ -97,16 +97,28 @@ function getNumberOfBindings(rawStats) {
   return rawStats.numBindings;
 }
 
+function getLOC(rawStats) {
+  return rawStats.loc; 
+}
+
 function statsify(rawStats, allStats) {
   return {
     percentageOfBindings: getNumberOfBindings(rawStats) / getNumberOfBindings(allStats[getFirstCommit(allStats)]), 
+    percentageOfLOC: getLOC(rawStats) / getLOC(allStats[getFirstCommit(allStats)]),
     numOfBindings: getNumberOfBindings(rawStats),
+    numOfLOC: getLOC(rawStats),
   }
+}
+
+function formatPercent(num) {
+  return (num * 100).toFixed(2);
 }
 
 function getTweetFromStats(stats) {
   let percentage = (stats.percentageOfBindings * 100).toFixed(2);
-  return `We're down to ${stats.numOfBindings} bindings, which is about ${percentage}% of what we had.`
+  return `XBL stats update 📈🔥🦊:
+* ${stats.numOfBindings} bindings (${formatPercent(stats.percentageOfBindings)}% of original bindings)
+* ${stats.numOfLOC} lines of code (${formatPercent(stats.percentageOfLOC)}% of original LOCs)`
 }
 
   
